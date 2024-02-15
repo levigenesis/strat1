@@ -78,6 +78,38 @@ local function dig()
     end
 end
 
+-- Teleport to the Dungeon area (79) and then to the rock-door
+local dungeonName = "79 | Dungeon"
+local instanceName = "rock-door"
+
+local function teleportPlayerToLocation(locationPath)
+    local map = game:GetService("Workspace").Map
+    local player = game.Players.LocalPlayer
+    local location = map[locationPath] and map[locationPath].PERSISTENT and map[locationPath].PERSISTENT.Teleport
+
+    if location then
+        local humanoidRootPart = player.Character and player.Character:FindFirstChild("HumanoidRootPart")
+
+        if humanoidRootPart then
+            humanoidRootPart.CFrame = location.CFrame
+        end
+    end
+end
+
+teleportPlayerToLocation(dungeonName)
+wait(2)  -- Adjust the wait time as needed
+
+-- Check if the specified dungeon exists in the map
+local map = game:GetService("Workspace").Map
+local dungeon = map[dungeonName]
+
+if dungeon and dungeon.INTERACT and dungeon.INTERACT.Instances and dungeon.INTERACT.Instances[instanceName] then
+    local doorInstance = dungeon.INTERACT.Instances[instanceName]
+    humanoidRootPart.CFrame = CFrame.new(doorInstance.Position)
+else
+    warn("Specified dungeon or instance not found.")
+end
+
 local Fluent = loadstring(game:HttpGet("https://github.com/dawid-scripts/Fluent/releases/latest/download/main.lua"))()
 local SaveManager = loadstring(game:HttpGet("https://raw.githubusercontent.com/dawid-scripts/Fluent/master/Addons/SaveManager.lua"))()
 local InterfaceManager = loadstring(game:HttpGet("https://raw.githubusercontent.com/dawid-scripts/Fluent/master/Addons/InterfaceManager.lua"))()
