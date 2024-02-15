@@ -1,7 +1,5 @@
 local ReplicatedStorage = game:GetService("ReplicatedStorage")
-local RunService = game:GetService("RunService")
 local Players = game:GetService("Players")
-local TweenService = game:GetService("TweenService")
 
 local Things = workspace:WaitForChild("__THINGS")
 local Active = Things.__INSTANCE_CONTAINER:WaitForChild("Active")
@@ -78,42 +76,26 @@ local function dig()
     end
 end
 
--- Teleport to the Dungeon area (79) and then to the rock-door
-local dungeonName = "79 | Dungeon"
-local instanceName = "rock-door"
+-- Teleport to the AdvancedDigsite Enter location
+local locationPath = game:GetService("Workspace")["__THINGS"].Instances.AdvancedDigsite.Teleports.Enter
 
-local function teleportPlayerToLocation(locationPath)
-    local map = workspace:FindFirstChild("__MAP") -- Adjust this name to the actual name of your map container
-    local player = game.Players.LocalPlayer
-    local location = map and map:FindFirstChild(locationPath) and map[locationPath]:FindFirstChild("PERSISTENT") and map[locationPath].PERSISTENT.Teleport
-
-    if location then
-        local humanoidRootPart = player.Character and player.Character:FindFirstChild("HumanoidRootPart")
-
-        if humanoidRootPart then
-            humanoidRootPart.CFrame = location.CFrame
-        end
+local function teleportPlayerToLocation(path)
+    local rootPart = game.Players.LocalPlayer.Character:FindFirstChild("HumanoidRootPart")
+    if path and rootPart then
+        rootPart.CFrame = path.CFrame
     end
 end
 
+teleportPlayerToLocation(locationPath)
+wait(2)
 
-teleportPlayerToLocation(dungeonName)
-wait(2)  -- Adjust the wait time as needed
-
--- Check if the specified dungeon exists in the map
-local map = game:GetService("Workspace").Map
-local dungeon = map[dungeonName]
-
-if dungeon and dungeon.INTERACT and dungeon.INTERACT.Instances and dungeon.INTERACT.Instances[instanceName] then
-    local doorInstance = dungeon.INTERACT.Instances[instanceName]
-    humanoidRootPart.CFrame = CFrame.new(doorInstance.Position)
-else
-    warn("Specified dungeon or instance not found.")
-end
+-- Your existing code...
 
 local Fluent = loadstring(game:HttpGet("https://github.com/dawid-scripts/Fluent/releases/latest/download/main.lua"))()
 local SaveManager = loadstring(game:HttpGet("https://raw.githubusercontent.com/dawid-scripts/Fluent/master/Addons/SaveManager.lua"))()
 local InterfaceManager = loadstring(game:HttpGet("https://raw.githubusercontent.com/dawid-scripts/Fluent/master/Addons/InterfaceManager.lua"))()
+
+-- Your existing code...
 
 local Window = Fluent:CreateWindow({
     Title = "Ani's script PS99",
