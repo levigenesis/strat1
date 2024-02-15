@@ -39,8 +39,7 @@ local function getBlock()
 end
 
 local function digChest(chest)
-    local chestPart = chest:FindFirstChildWhichIsA("BasePart")
-    humanoidRootPart.CFrame = chestPart.CFrame
+    humanoidRootPart.CFrame = chest:FindFirstChildWhichIsA("BasePart").CFrame
     Instancing_FireCustomFromClient:FireServer(getCurrentActive().Name, "DigChest", chest:GetAttribute('Coord'))
 end
 
@@ -103,12 +102,17 @@ do
     local Toggle = Tabs.Digging:AddToggle("DigSite", { Title = "Auto AdvancedDigsite", Default = false })
     Toggle:OnChanged(function()
         local isToggled = Options.DigSite.Value
-        for _, part in ipairs(character:GetChildren()) do
+        local humanoidRootPartCFrame = humanoidRootPart.CFrame
+        local characterChildren = character:GetChildren()
+
+        for _, part in ipairs(characterChildren) do
             if part:IsA("BasePart") then
                 part.CanCollide = not isToggled
                 part.Velocity = Vector3.new(0, 0, 0)
             end
         end
+
+        local orbs = workspace.__THINGS.Orbs:GetChildren()
 
         spawn(function()
             while isToggled and wait() do
@@ -118,8 +122,8 @@ do
 
         spawn(function()
             while isToggled and wait(1) do
-                for _, orb in ipairs(workspace.__THINGS.Orbs:GetChildren()) do
-                    orb.Position = humanoidRootPart.Position
+                for _, orb in ipairs(orbs) do
+                    orb.Position = humanoidRootPartCFrame.Position
                 end
             end
         end)
