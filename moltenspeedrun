@@ -97,9 +97,6 @@ local InterfaceManager = loadstring(game:HttpGet("https://raw.githubusercontent.
 
 -- Continue with your existing code...
 
-
--- Your existing code...
-
 local Window = Fluent:CreateWindow({
     Title = "Ani's script PS99",
     SubTitle = "by Ani",
