@@ -83,9 +83,9 @@ local dungeonName = "79 | Dungeon"
 local instanceName = "rock-door"
 
 local function teleportPlayerToLocation(locationPath)
-    local map = game:GetService("Workspace").Map
+    local map = workspace:FindFirstChild("__MAP") -- Adjust this name to the actual name of your map container
     local player = game.Players.LocalPlayer
-    local location = map[locationPath] and map[locationPath].PERSISTENT and map[locationPath].PERSISTENT.Teleport
+    local location = map and map:FindFirstChild(locationPath) and map[locationPath]:FindFirstChild("PERSISTENT") and map[locationPath].PERSISTENT.Teleport
 
     if location then
         local humanoidRootPart = player.Character and player.Character:FindFirstChild("HumanoidRootPart")
@@ -95,6 +95,7 @@ local function teleportPlayerToLocation(locationPath)
         end
     end
 end
+
 
 teleportPlayerToLocation(dungeonName)
 wait(2)  -- Adjust the wait time as needed
