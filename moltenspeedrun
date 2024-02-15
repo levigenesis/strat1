@@ -1,8 +1,9 @@
 local ReplicatedStorage = game:GetService("ReplicatedStorage")
+local RunService = game:GetService("RunService")
 local Players = game:GetService("Players")
+local TweenService = game:GetService("TweenService")
 
-local Workspace = game:GetService("Workspace")
-local Things = Workspace:WaitForChild("__THINGS")
+local Things = workspace:WaitForChild("__THINGS")
 local Active = Things.__INSTANCE_CONTAINER:WaitForChild("Active")
 local Player = Players.LocalPlayer
 local character = Player.Character or Player.CharacterAdded:Wait()
@@ -14,33 +15,72 @@ local ReplicatedStorage = game:GetService("ReplicatedStorage")
 local Network = ReplicatedStorage:WaitForChild("Network")
 local Instancing_FireCustomFromClient = Network:WaitForChild("Instancing_FireCustomFromClient")
 
-local Fluent = loadstring(game:HttpGet("https://github.com/dawid-scripts/Fluent/releases/latest/download/main.lua"))()
-local SaveManager = loadstring(game:HttpGet("https://raw.githubusercontent.com/dawid-scripts/Fluent/master/Addons/SaveManager.lua"))()
-local InterfaceManager = loadstring(game:HttpGet("https://raw.githubusercontent.com/dawid-scripts/Fluent/master/Addons/InterfaceManager.lua"))()
+local function getCurrentActive()
+    return Active:GetChildren()[1]
+end
 
--- Define default settings
-local defaultSettings = {
-    DigSite = false,
-}
+local function getChest()
+    return ActiveChests:GetChildren()[1]
+end
 
--- Load settings
-local savedSettings = SaveManager:Load("AniHub/specific-game/settings") or defaultSettings
+local function getBlock()
+    local blocks = ActiveBlocks:GetChildren()
+    for i = #blocks, 1, -1 do
+        local currentBlock = blocks[i]
+        local color = currentBlock.Color
+        if color.R > 0.067 or color.G > 0.067 or color.B > 0.067 then
+            local coord = currentBlock:GetAttribute('Coord')
+            if coord.X > 1 and coord.X < 16 and coord.Z > 1 and coord.Z < 16 then
+                return currentBlock
+            end
+        end
+    end
+    return nil
+end
 
--- Update settings
-local function updateSettings(newSettings)
-    for key, value in pairs(newSettings) do
-        savedSettings[key] = value
+local function digChest(chest)
+    humanoidRootPart.CFrame = chest:FindFirstChildWhichIsA("BasePart").CFrame
+    Instancing_FireCustomFromClient:FireServer(getCurrentActive().Name, "DigChest", chest:GetAttribute('Coord'))
+end
+
+local function digBlock(block)
+    humanoidRootPart.CFrame = block.CFrame
+    Instancing_FireCustomFromClient:FireServer(getCurrentActive().Name, "DigBlock", block:GetAttribute('Coord'))
+end
+
+local function dig()
+    local chest = getChest()
+    if chest then
+        for j = 1, 20 do
+            if chest.Parent == ActiveChests then
+                digChest(chest)
+                wait(0.2)
+            else
+                break
+            end
+        end
+        if chest.Parent == ActiveChests then
+            chest:Destroy()
+        end
+    else
+        local block = getBlock()
+        for j = 1, 100 do
+            if block.Parent == ActiveBlocks then
+                digBlock(block)
+                wait(0.2)
+            else
+                break
+            end
+        end
+        if block.Parent == ActiveBlocks then
+            block:Destroy()
+        end
     end
 end
 
--- Save settings
-local function saveSettings()
-    SaveManager:Save("AniHub/specific-game/settings", savedSettings)
-end
-
--- Continue with your existing code...
-
--- Your existing code...
+local Fluent = loadstring(game:HttpGet("https://github.com/dawid-scripts/Fluent/releases/latest/download/main.lua"))()
+local SaveManager = loadstring(game:HttpGet("https://raw.githubusercontent.com/dawid-scripts/Fluent/master/Addons/SaveManager.lua"))()
+local InterfaceManager = loadstring(game:HttpGet("https://raw.githubusercontent.com/dawid-scripts/Fluent/master/Addons/InterfaceManager.lua"))()
 
 local Window = Fluent:CreateWindow({
     Title = "Ani's script PS99",
@@ -59,7 +99,7 @@ local Tabs = {
 local Options = Fluent.Options
 
 do
-    local Toggle = Tabs.Digging:AddToggle("DigSite", { Title = "Auto AdvancedDigsite", Default = savedSettings.DigSite })
+    local Toggle = Tabs.Digging:AddToggle("DigSite", { Title = "Auto AdvancedDigsite", Default = false })
     Toggle:OnChanged(function()
         local isToggled = Options.DigSite.Value
         local humanoidRootPartCFrame = humanoidRootPart.CFrame
@@ -87,14 +127,11 @@ do
                 end
             end
         end)
-        
-        savedSettings.DigSite = isToggled
-        saveSettings()
     end)
 end
 
-InterfaceManager:SetLibrary(Fluent)
 SaveManager:SetLibrary(Fluent)
+InterfaceManager:SetLibrary(Fluent)
 SaveManager:IgnoreThemeSettings()
 SaveManager:SetIgnoreIndexes({})
 InterfaceManager:SetFolder("AniHub")
