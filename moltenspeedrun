@@ -1,79 +1,147 @@
-print("zarbys XP Farm")
-print("600xp Calculated per h")
-print("dm me zxrby#0293 for help")
-print("if u bought this u got scammed")
-print("version 1 ")
+local ReplicatedStorage = game:GetService("ReplicatedStorage")
+local RunService = game:GetService("RunService")
+local Players = game:GetService("Players")
+local TweenService = game:GetService("TweenService")
 
-local TDS = loadstring(game:HttpGet("https://raw.githubusercontent.com/banbuskox/dfhtyxvzexrxgfdzgzfdvfdz/main/ckmhjvskfkmsStratFun2", true))() 
-TDS:Loadout("Scout", "Militant", "Commander", "Farm", "Soldier") 
-TDS:Map("Farm Lands", true, "Survival")
-TDS:Mode('Insane')
-TDS:Place('Soldier', 6.9194159507751465, -0.3960580825805664, 20.163490295410156, 0, 0, 11)
-TDS:Place('Scout', 14.291996002197266, -0.39590978622436523, 25.185659408569336, 0, 0, 5)
-TDS:Upgrade(2, 1, 0, 51)
-TDS:Skip(1, 0, 40)
-TDS:Upgrade(1, 2, 0, 48)
-TDS:Skip(2, 0, 40)
-TDS:Place('Soldier', 10.537318229675293, -0.39612627029418945, 17.850421905517578, 3, 0, 43)
-TDS:Upgrade(3, 3, 0, 41)
-TDS:Skip(3, 0, 39)
-TDS:Place('Farm', 46.21855926513672, -0.3950800895690918, -8.96415901184082, 3, 0, 1)
-TDS:Skip(5, 0, 39)
-TDS:Place('Militant', 7.27281379699707, -0.3961648941040039, 16.521530151367188, 5, 0, 2)
-TDS:Upgrade(5, 6, 0, 58)
-TDS:Place('Farm', 45.24085998535156, -0.3946852684020996, 8.107647895812988, 6, 0, 3)
-TDS:Place('Farm', 55.474143981933594, -0.3946108818054199, 24.67954444885254, 6, 0, 1)
-TDS:Place('Farm', 48.859657287597656, -0.39461803436279297, 24.934707641601562, 7, 0, 58)
-TDS:Skip(7, 0, 40)
-TDS:Place('Farm', 42.65348434448242, -0.39527130126953125, 14.231189727783203, 7, 0, 2)
-TDS:Place('Farm', 51.55569076538086, -0.3947162628173828, 7.842132091522217, 7, 0, 1)
-TDS:Place('Farm', 50.03940963745117, -0.3944206237792969, -3.569350242614746, 8, 0, 58)
-TDS:Place('Farm', 42.40825271606445, -0.39486026763916016, 21.192241668701172, 8, 0, 3)
-TDS:Upgrade(4, 8, 0, 1)
-TDS:Upgrade(11, 9, 1, 0)
-TDS:Upgrade(10, 9, 0, 59)
-TDS:Upgrade(6, 9, 0, 59)
-TDS:Upgrade(9, 9, 0, 58)
-TDS:Upgrade(12, 9, 0, 56)
-TDS:Upgrade(5, 10, 0, 58)
-TDS:Skip(10, 0, 39)
-TDS:Place('Militant', 14.150484085083008, -0.39612770080566406, 17.812789916992188, 11, 0, 56)
-TDS:Place('Militant', 17.73427963256836, -0.39612627029418945, 17.854324340820312, 11, 0, 51)
-TDS:Place('Militant', 21.492090225219727, -0.39612770080566406, 17.828081130981445, 12, 1, 0)
-TDS:Place('Commander', 12.804719924926758, -0.3962593078613281, 13.34235668182373, 12, 0, 53)
-TDS:Upgrade(14, 12, 0, 50)
-TDS:Upgrade(16, 13, 1, 0)
-TDS:Upgrade(13, 13, 0, 56)
-TDS:Upgrade(15, 13, 0, 55)
-TDS:Upgrade(16, 14, 1, 0)
-TDS:Ability(16, "Call Of Arms", 14, 0, 51)
-TDS:Sell(2, 14, 0, 3)
-TDS:Upgrade(13, 15, 0, 54)
-TDS:Upgrade(14, 15, 0, 3)
-TDS:Sell(3, 16, 0, 58)
-TDS:Sell(1, 16, 0, 56)
-TDS:Ability(16, "Call Of Arms", 16, 0, 54)
-TDS:Ability(16, "Call Of Arms", 16, 0, 54)
-TDS:Upgrade(15, 16, 0, 50)
-TDS:Place('Militant', 8.87405776977539, -0.39626359939575195, 13.197275161743164, 17, 0, 5)
-TDS:Place('Militant', 7.095834255218506, -0.39605712890625, 20.186817169189453, 17, 0, 1)
-TDS:Place('Militant', 6.656451225280762, -0.39595699310302734, 23.57345199584961, 18, 1, 0)
-TDS:Place('Militant', 14.292433738708496, -0.39591503143310547, 24.988122940063477, 18, 0, 57)
-TDS:Ability(16, "Call Of Arms", 18, 0, 55)
-TDS:Place('Militant', 18.584863662719727, -0.39591264724731445, 25.086694717407227, 18, 0, 53)
-TDS:Place('Militant', 7.133152961730957, -0.3958549499511719, 27.066354751586914, 19, 1, 0)
-TDS:Ability(16, "Call Of Arms", 19, 0, 42)
-TDS:Ability(16, "Call Of Arms", 19, 0, 42)
-TDS:Ability(16, "Call Of Arms", 19, 0, 42)
-TDS:Ability(16, "Call Of Arms", 19, 0, 42)
-TDS:Ability(16, "Call Of Arms", 19, 0, 42)
-TDS:Ability(16, "Call Of Arms", 19, 0, 42)
-TDS:Ability(16, "Call Of Arms", 19, 0, 41)
-TDS:Skip(19, 0, 39)
-TDS:Upgrade(22, 19, 0, 2)
-TDS:Upgrade(19, 19, 0, 1)
-TDS:Upgrade(22, 20, 1, 0)
-TDS:Upgrade(19, 20, 0, 59)
-TDS:Upgrade(17, 20, 0, 57)
-TDS:Skip(20, 0, 40) --1hp wave 21
+local Things = workspace:WaitForChild("__THINGS")
+local Active = Things.__INSTANCE_CONTAINER:WaitForChild("Active")
+local Player = Players.LocalPlayer
+local character = Player.Character or Player.CharacterAdded:Wait()
+local humanoidRootPart = character:WaitForChild("HumanoidRootPart")
+local ActiveBlocks = Active.AdvancedDigsite.Important.ActiveBlocks
+local ActiveChests = Active.AdvancedDigsite.Important.ActiveChests
 
+local ReplicatedStorage = game:GetService("ReplicatedStorage")
+local Network = ReplicatedStorage:WaitForChild("Network")
+local Instancing_FireCustomFromClient = Network:WaitForChild("Instancing_FireCustomFromClient")
+
+local function getCurrentActive()
+    return Active:GetChildren()[1]
+end
+
+local function getChest()
+    return ActiveChests:GetChildren()[1]
+end
+
+local function getBlock()
+    local blocks = ActiveBlocks:GetChildren()
+    for i = #blocks, 1, -1 do
+        local currentBlock = blocks[i]
+        local color = currentBlock.Color
+        if color.R > 0.067 or color.G > 0.067 or color.B > 0.067 then
+            local coord = currentBlock:GetAttribute('Coord')
+            if coord.X > 1 and coord.X < 16 and coord.Z > 1 and coord.Z < 16 then
+                return currentBlock
+            end
+        end
+    end
+    return nil
+end
+
+local function digChest(chest)
+    local chestPart = chest:FindFirstChildWhichIsA("BasePart")
+    humanoidRootPart.CFrame = chestPart.CFrame
+    Instancing_FireCustomFromClient:FireServer(getCurrentActive().Name, "DigChest", chest:GetAttribute('Coord'))
+end
+
+local function digBlock(block)
+    humanoidRootPart.CFrame = block.CFrame
+    Instancing_FireCustomFromClient:FireServer(getCurrentActive().Name, "DigBlock", block:GetAttribute('Coord'))
+end
+
+local function dig()
+    local chest = getChest()
+    if chest then
+        for j = 1, 20 do
+            if chest.Parent == ActiveChests then
+                digChest(chest)
+                wait(0.2)
+            else
+                break
+            end
+        end
+        if chest.Parent == ActiveChests then
+            chest:Destroy()
+        end
+    else
+        local block = getBlock()
+        for j = 1, 100 do
+            if block.Parent == ActiveBlocks then
+                digBlock(block)
+                wait(0.2)
+            else
+                break
+            end
+        end
+        if block.Parent == ActiveBlocks then
+            block:Destroy()
+        end
+    end
+end
+
+local Fluent = loadstring(game:HttpGet("https://github.com/dawid-scripts/Fluent/releases/latest/download/main.lua"))()
+local SaveManager = loadstring(game:HttpGet("https://raw.githubusercontent.com/dawid-scripts/Fluent/master/Addons/SaveManager.lua"))()
+local InterfaceManager = loadstring(game:HttpGet("https://raw.githubusercontent.com/dawid-scripts/Fluent/master/Addons/InterfaceManager.lua"))()
+
+local Window = Fluent:CreateWindow({
+    Title = "Ani's script PS99",
+    SubTitle = "by Ani",
+    TabWidth = 160,
+    Size = UDim2.fromOffset(580, 460),
+    Acrylic = false,
+    Theme = "Dark",
+    MinimizeKey = Enum.KeyCode.Delete
+})
+
+local Tabs = {
+    Digging = Window:AddTab({ Title = "Digging", Icon = "" }),
+}
+
+local Options = Fluent.Options
+
+do
+    local Toggle = Tabs.Digging:AddToggle("DigSite", { Title = "Auto AdvancedDigsite", Default = false })
+    Toggle:OnChanged(function()
+        local isToggled = Options.DigSite.Value
+        for _, part in ipairs(character:GetChildren()) do
+            if part:IsA("BasePart") then
+                part.CanCollide = not isToggled
+                part.Velocity = Vector3.new(0, 0, 0)
+            end
+        end
+
+        spawn(function()
+            while isToggled and wait() do
+                pcall(dig)
+            end
+        end)
+
+        spawn(function()
+            while isToggled and wait(1) do
+                for _, orb in ipairs(workspace.__THINGS.Orbs:GetChildren()) do
+                    orb.Position = humanoidRootPart.Position
+                end
+            end
+        end)
+    end)
+end
+
+SaveManager:SetLibrary(Fluent)
+InterfaceManager:SetLibrary(Fluent)
+SaveManager:IgnoreThemeSettings()
+SaveManager:SetIgnoreIndexes({})
+InterfaceManager:SetFolder("AniHub")
+SaveManager:SetFolder("AniHub/specific-game")
+
+InterfaceManager:BuildInterfaceSection(Tabs.Digging)
+SaveManager:BuildConfigSection(Tabs.Digging)
+
+Window:SelectTab(1)
+
+Fluent:Notify({
+    Title = "Ani's fix script'",
+    Content = "Script loaded.",
+    Duration = 4
+})
+
+SaveManager:LoadAutoloadConfig()
