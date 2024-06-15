@@ -1,0 +1,253 @@
+-- // SERVICES
+local Players = game:GetService("Players")
+local TeleportService = game:GetService("TeleportService")
+local ReplicatedStorage = game:GetService("ReplicatedStorage")
+local Network = ReplicatedStorage:WaitForChild("Network")
+local MailboxClaimAll = Network:WaitForChild("Mailbox: Claim All")
+local Library = require(ReplicatedStorage.Library)
+local saveMod = require(ReplicatedStorage.Library.Client.Save)
+local RAPValues = require(ReplicatedStorage.Library.Client.DevRAPCmds)
+local PathfindingService = game:GetService("PathfindingService")
+local VirtualInputManager = game:GetService("VirtualInputManager")
+
+-- // TELEPORT TO PLAZA FUNCTION
+local function teleportToPlaza()
+    if game.PlaceId ~= 15502339080 then
+        TeleportService:Teleport(15502339080, Players.LocalPlayer)
+    end
+end
+
+-- // AUTO BOOTH CLAIM FUNCTIONS
+local function getActiveBooths()
+    local success, activeBooths = pcall(function()
+        return ReplicatedStorage.Library.Signal["Booths_Get_Active"]:Invoke()
+    end)
+    if success and activeBooths then
+        return activeBooths
+    else
+        warn("Aktif booth bilgileri alınamadı.")
+        return {}
+    end
+end
+
+local function getPlaceholderModelFromID(boothID)
+    local success, placeholderModel = pcall(function()
+        return ReplicatedStorage.Library.Signal["Booths_GetPlaceholderModelFromID"]:Invoke(boothID)
+    end)
+    if success and placeholderModel then
+        return placeholderModel
+    else
+        warn("Booth ID " .. boothID .. " için placeholder model bulunamadı.")
+        return nil
+    end
+end
+
+local frontRowBoothIDs = {13, 14, 12, 15, 10, 16, 8, 17, 18}
+local middleRowBoothIDs = {22, 28, 23, 21, 19, 24, 27, 20, 26, 25, 30, 29}
+local backRowBoothIDs = {}
+
+for i = 1, 41 do
+    if not table.find(frontRowBoothIDs, i) and not table.find(middleRowBoothIDs, i) then
+        table.insert(backRowBoothIDs, i)
+    end
+end
+
+local allBoothIDs = {}
+for _, id in ipairs(frontRowBoothIDs) do table.insert(allBoothIDs, id) end
+for _, id in ipairs(middleRowBoothIDs) do table.insert(allBoothIDs, id) end
+for _, id in ipairs(backRowBoothIDs) do table.insert(allBoothIDs, id) end
+
+local function walkToPosition(targetPosition)
+    local character = Players.LocalPlayer.Character
+    local humanoid = character and character:FindFirstChildOfClass("Humanoid")
+
+    if not character or not humanoid then
+        warn("Character veya Humanoid bulunamadı.")
+        return
+    end
+
+    humanoid:MoveTo(targetPosition)
+
+    humanoid.MoveToFinished:Wait()
+end
+
+local function claimAndWalkToBooth()
+    local activeBooths = getActiveBooths()
+
+    for _, boothID in ipairs(allBoothIDs) do
+        if not activeBooths[tostring(boothID)] then
+            -- Booth'u claim et
+            local args = { tostring(boothID) }
+            local claimSuccess = pcall(function()
+                Network.Booths_ClaimBooth:InvokeServer(unpack(args))
+            end)
+            if claimSuccess then
+                -- Placeholder model bilgilerini al
+                local placeholderModel = getPlaceholderModelFromID(tostring(boothID))
+                if placeholderModel then
+                    local boothPart = placeholderModel:FindFirstChild("Booth")
+                    if boothPart and boothPart:IsA("BasePart") then
+                        -- Karakteri booth'a yürüt
+                        walkToPosition(boothPart.Position)
+                        print("Booth ID " .. boothID .. " claim edildi ve booth'a yürünüyor.")
+                        
+                        -- Booth'a oturma: önce true, sonra false
+                        local sitArgsTrue = { true }
+                        Network.Booths_RequestSit:FireServer(unpack(sitArgsTrue))
+                        task.wait(0.1) -- Küçük bir bekleme süresi ekledik
+                        local sitArgsFalse = { false }
+                        Network.Booths_RequestSit:FireServer(unpack(sitArgsFalse))
+                        print("Booth'daki koltuğa oturuldu.")
+                        
+                        return
+                    else
+                        warn("Booth part bulunamadı.")
+                    end
+                end
+            else
+                warn("Booth ID " .. boothID .. " claim edilemedi.")
+            end
+        end
+    end
+
+    warn("Boş booth bulunamadı.")
+end
+
+local function discardAndWipeBooth()
+    -- Booth'u discard et
+    local discardSuccess, discardResult = pcall(function()
+        return Network.Booths_DiscardBooth:InvokeServer()
+    end)
+    if discardSuccess then
+        print("Booth başarıyla discard edildi.")
+    else
+        warn("Booth discard edilemedi.", discardResult)
+    end
+    
+    -- Booth saved listing'lerini temizle
+    local wipeSuccess, wipeResult = pcall(function()
+        return Network.Booths_WipeSavedListings:FireServer()
+    end)
+    if wipeSuccess then
+        print("Booth saved listing'leri başarıyla temizlendi.")
+    else
+        warn("Booth saved listing'leri temizlenemedi.", wipeResult)
+    end
+end
+
+-- // AUTO SELL FUNCTIONS
+local function GetItemRAP(Class, itemTable)
+    return (RAPValues.Get({
+        Class = {Name = Class},
+        IsA = function(InputClass)
+            return InputClass == Class
+        end,
+        GetId = function()
+            return itemTable.id
+        end,
+        StackKey = function()
+            return game:GetService("HttpService"):JSONEncode({
+                id = itemTable.id,
+                pt = itemTable.pt,
+                sh = itemTable.sh,
+                tn = itemTable.tn
+            })
+        end
+    }) or nil)
+end
+
+-- // FUNCTION TO CREATE A LISTING IN A BOOTH
+local function createBoothListing(uuid, price, amount)
+    local adjustedPrice = price * 0.99 -- Subtract 1% from the RAP value
+    local args = {
+        [1] = uuid,
+        [2] = adjustedPrice,
+        [3] = amount
+    }
+
+    local success, result = pcall(function()
+        return Network["Booths_CreateListing"]:InvokeServer(unpack(args))
+    end)
+
+    if success then
+        print("Listing created successfully for UUID:", uuid, "Price:", price, "Amount:", amount)
+    else
+        warn("Failed to create listing for UUID:", uuid, result)
+    end
+end
+
+local function createListingsForHugePets()
+    local inventory = saveMod.Get().Inventory.Pet
+    local amount = 1
+
+    -- Find all Huge Pets in the inventory
+    for uuid, pet in pairs(inventory) do
+        if string.find(pet.id, "Huge") then
+            local devrapData = GetItemRAP("Pet", pet)
+            if devrapData then
+                local price = devrapData -- devrap verisini direkt kullan
+                print("Found Huge Pet with UUID:", uuid)
+                print("Creating listing for UUID:", uuid, "with price:", price, "and amount:", amount)
+                createBoothListing(uuid, price, amount)
+                task.wait(5) -- Optional: Add a small delay to prevent rapid consecutive calls
+            else
+                warn("Skipping Huge Pet with UUID:", uuid, "due to missing DevRAP value")
+            end
+        end
+    end
+end
+
+-- // AUTO CLAIM MAIL FUNCTION
+local function claimAllMail()
+    -- Mailbox: Claim All RemoteFunction'ını çağır ve sonucu yazdır
+    local success, result = pcall(function()
+        return MailboxClaimAll:InvokeServer()
+    end)
+
+    if success then
+        print("Mailbox: Claim All sonucu: " .. tostring(result))
+    else
+        warn("Mailbox: Claim All çağrısı başarısız: " .. tostring(result))
+    end
+end
+
+-- // ANTI-AFK FUNCTION
+local function antiAFK()
+    while true do
+        task.wait(300) -- 5 minutes
+        VirtualInputManager:SendKeyEvent(true, "W", false, game)
+        task.wait(0.2)
+        VirtualInputManager:SendKeyEvent(false, "W", false, game)
+    end
+end
+
+-- // MAIN
+teleportToPlaza()
+claimAndWalkToBooth()
+
+-- İlk çalıştırıldığında hemen ilanları koy
+createListingsForHugePets()
+
+local listingInterval = 5 * 60 -- 5 minutes
+local discardInterval = 2 * 60 * 60 -- 2 hours
+local timeSinceLastDiscard = 0
+
+-- Anti-AFK fonksiyonunu bağımsız olarak çalıştır
+spawn(antiAFK)
+
+while true do
+    task.wait(listingInterval) -- 5 minutes
+    timeSinceLastDiscard = timeSinceLastDiscard + listingInterval
+
+    -- Mail'leri claim et
+    claimAllMail()
+
+    -- İlanları oluştur
+    createListingsForHugePets()
+
+    if timeSinceLastDiscard >= discardInterval then
+        discardAndWipeBooth()
+        claimAndWalkToBooth()
+        timeSinceLastDiscard = 0
+    end
+end
