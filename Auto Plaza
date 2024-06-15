@@ -215,9 +215,9 @@ end
 local function antiAFK()
     while true do
         task.wait(300) -- 5 minutes
-        VirtualInputManager:SendKeyEvent(true, "W", false, game)
+        VirtualInputManager:SendKeyEvent(true, "Space", false, game)
         task.wait(0.2)
-        VirtualInputManager:SendKeyEvent(false, "W", false, game)
+        VirtualInputManager:SendKeyEvent(false, "Space", false, game)
     end
 end
 
