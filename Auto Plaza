@@ -90,17 +90,6 @@ local function claimAndWalkToBooth()
                         -- Karakteri booth'a yürüt
                         walkToPosition(boothPart.Position)
                         print("Booth ID " .. boothID .. " claim edildi ve booth'a yürünüyor.")
-                        
-                        -- Booth'a oturma: önce true, sonra false, sonra tekrar true
-                        local sitArgsTrue = { true }
-                        Network.Booths_RequestSit:FireServer(unpack(sitArgsTrue))
-                        task.wait(0.1) -- Küçük bir bekleme süresi ekledik
-                        local sitArgsFalse = { false }
-                        Network.Booths_RequestSit:FireServer(unpack(sitArgsFalse))
-                        task.wait(0.1) -- Küçük bir bekleme süresi ekledik
-                        Network.Booths_RequestSit:FireServer(unpack(sitArgsTrue))
-                        print("Booth'daki koltuğa oturuldu.")
-                        
                         return
                     else
                         warn("Booth part bulunamadı.")
