@@ -149,7 +149,7 @@ end
 
 -- // FUNCTION TO CREATE A LISTING IN A BOOTH
 local function createBoothListing(uuid, price, amount)
-    local adjustedPrice = price * 0.96 -- Subtract 2% from the RAP value
+    local adjustedPrice = price * 0.95 -- Subtract 2% from the RAP value
     local args = {
         [1] = uuid,
         [2] = adjustedPrice,
