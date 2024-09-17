@@ -12,7 +12,12 @@ local VirtualInputManager = game:GetService("VirtualInputManager")
 
 -- // TELEPORT TO PLAZA FUNCTION
 local function teleportToPlaza()
-    if game.PlaceId ~= 15502339080 then
+    if game.PlaceId == 15502339080 then
+        -- Check if the number of players is less than 10
+        if #Players:GetChildren() < 10 then
+            TeleportService:Teleport(15502339080, Players.LocalPlayer)
+        end
+    else
         TeleportService:Teleport(15502339080, Players.LocalPlayer)
     end
 end
