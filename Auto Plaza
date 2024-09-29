@@ -8,6 +8,7 @@ local Library = require(ReplicatedStorage.Library)
 local saveMod = require(ReplicatedStorage.Library.Client.Save)
 local RAPValues = require(ReplicatedStorage.Library.Client.DevRAPCmds)
 local PathfindingService = game:GetService("PathfindingService")
+local VirtualInputManager = game:GetService("VirtualInputManager")
 
 -- // TELEPORT TO PLAZA FUNCTION
 local function teleportToPlaza()
@@ -222,6 +223,16 @@ local function claimAllMail()
     end
 end
 
+-- // ANTI-AFK FUNCTION
+local function antiAFK()
+    while true do
+        task.wait(300) -- 5 minutes
+        VirtualInputManager:SendMouseButtonEvent(0, 0, 0, true, game, 0)  -- Simulate mouse button press (left-click)
+        task.wait(0.2)
+        VirtualInputManager:SendMouseButtonEvent(0, 0, 0, false, game, 0) -- Simulate mouse button release (left-click)
+    end
+end
+
 -- // MAIN
 teleportToPlaza()
 claimAndWalkToBooth()
@@ -233,6 +244,8 @@ createListingsForEggs()
 local listingInterval = 5 * 60 -- 5 minutes
 local discardInterval = 2 * 60 * 60 -- 2 hours
 local timeSinceLastDiscard = 0
+
+spawn(antiAFK)
 
 while true do
     task.wait(listingInterval) -- 5 minutes
