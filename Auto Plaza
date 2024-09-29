@@ -8,18 +8,14 @@ local Library = require(ReplicatedStorage.Library)
 local saveMod = require(ReplicatedStorage.Library.Client.Save)
 local RAPValues = require(ReplicatedStorage.Library.Client.DevRAPCmds)
 local PathfindingService = game:GetService("PathfindingService")
-local VirtualInputManager = game:GetService("VirtualInputManager")
 
 -- // TELEPORT TO PLAZA FUNCTION
 local function teleportToPlaza()
     if game.PlaceId == 15502339080 then
-        -- Check if the number of players is less than 10
         if #game:GetService("Players"):GetChildren() < 10 then
-            -- If there are fewer than 10 players, kick the local player with a message
             game.Players.LocalPlayer:Kick("kick")
         end
     else
-        -- If in any other PlaceId, teleport to the Plaza
         TeleportService:Teleport(15502339080, Players.LocalPlayer)
     end
 end
@@ -83,18 +79,15 @@ local function claimAndWalkToBooth()
 
     for _, boothID in ipairs(allBoothIDs) do
         if not activeBooths[tostring(boothID)] then
-            -- Booth'u claim et
             local args = { tostring(boothID) }
             local claimSuccess = pcall(function()
                 Network.Booths_ClaimBooth:InvokeServer(unpack(args))
             end)
             if claimSuccess then
-                -- Placeholder model bilgilerini al
                 local placeholderModel = getPlaceholderModelFromID(tostring(boothID))
                 if placeholderModel then
                     local boothPart = placeholderModel:FindFirstChild("Booth")
                     if boothPart and boothPart:IsA("BasePart") then
-                        -- Karakteri booth'a yürüt
                         walkToPosition(boothPart.Position)
                         print("Booth ID " .. boothID .. " claim edildi ve booth'a yürünüyor.")
                         return
@@ -112,7 +105,6 @@ local function claimAndWalkToBooth()
 end
 
 local function discardAndWipeBooth()
-    -- Booth'u discard et
     local discardSuccess, discardResult = pcall(function()
         return Network.Booths_DiscardBooth:InvokeServer()
     end)
@@ -122,7 +114,6 @@ local function discardAndWipeBooth()
         warn("Booth discard edilemedi.", discardResult)
     end
     
-    -- Booth saved listing'lerini temizle
     local wipeSuccess, wipeResult = pcall(function()
         return Network.Booths_WipeSavedListings:FireServer()
     end)
@@ -156,7 +147,7 @@ end
 
 -- // FUNCTION TO CREATE A LISTING IN A BOOTH
 local function createBoothListing(uuid, price, amount)
-    local adjustedPrice = price * 0.97 -- Subtract 2% from the RAP value
+    local adjustedPrice = price * 0.97
     local args = {
         [1] = uuid,
         [2] = adjustedPrice,
@@ -178,16 +169,15 @@ local function createListingsForHugePets()
     local inventory = saveMod.Get().Inventory.Pet
     local amount = 1
 
-    -- Find all Huge Pets in the inventory
     for uuid, pet in pairs(inventory) do
         if string.find(pet.id, "Huge") then
             local devrapData = GetItemRAP("Pet", pet)
             if devrapData then
-                local price = devrapData -- devrap verisini direkt kullan
+                local price = devrapData
                 print("Found Huge Pet with UUID:", uuid)
                 print("Creating listing for UUID:", uuid, "with price:", price, "and amount:", amount)
                 createBoothListing(uuid, price, amount)
-                task.wait(5) -- Optional: Add a small delay to prevent rapid consecutive calls
+                task.wait(5)
             else
                 warn("Skipping Huge Pet with UUID:", uuid, "due to missing DevRAP value")
             end
@@ -195,9 +185,32 @@ local function createListingsForHugePets()
     end
 end
 
+-- // FUNCTION TO SELL EGGS
+local function createListingsForEggs()
+    local inventory = saveMod.Get().Inventory.Egg
+    local amount = 1
+
+    if inventory then
+        for uuid, egg in pairs(inventory) do
+            if string.find(egg.id, "Egg") then
+                local devrapData = GetItemRAP("Egg", egg)
+                if devrapData then
+                    local price = devrapData
+                    print("Found Egg with UUID:", uuid)
+                    createBoothListing(uuid, price, amount)
+                    task.wait(5)
+                else
+                    warn("Skipping Egg with UUID:", uuid, "due to missing DevRAP value")
+                end
+            end
+        end
+    else
+        warn("Inventory.Egg is nil!")
+    end
+end
+
 -- // AUTO CLAIM MAIL FUNCTION
 local function claimAllMail()
-    -- Mailbox: Claim All RemoteFunction'ını çağır ve sonucu yazdır
     local success, result = pcall(function()
         return MailboxClaimAll:InvokeServer()
     end)
@@ -209,29 +222,17 @@ local function claimAllMail()
     end
 end
 
--- // ANTI-AFK FUNCTION
-local function antiAFK()
-    while true do
-        task.wait(300) -- 5 minutes
-        VirtualInputManager:SendMouseButtonEvent(0, 0, 0, true, game, 0)  -- Simulate mouse button press (left-click)
-        task.wait(0.2)
-        VirtualInputManager:SendMouseButtonEvent(0, 0, 0, false, game, 0) -- Simulate mouse button release (left-click)
-    end
-end
-
 -- // MAIN
 teleportToPlaza()
 claimAndWalkToBooth()
 
 -- İlk çalıştırıldığında hemen ilanları koy
 createListingsForHugePets()
+createListingsForEggs()
 
 local listingInterval = 5 * 60 -- 5 minutes
 local discardInterval = 2 * 60 * 60 -- 2 hours
 local timeSinceLastDiscard = 0
-
--- Anti-AFK fonksiyonunu bağımsız olarak çalıştır
-spawn(antiAFK)
 
 while true do
     task.wait(listingInterval) -- 5 minutes
@@ -242,6 +243,7 @@ while true do
 
     -- İlanları oluştur
     createListingsForHugePets()
+    createListingsForEggs()
 
     if timeSinceLastDiscard >= discardInterval then
         discardAndWipeBooth()
