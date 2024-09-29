@@ -226,7 +226,7 @@ end
 -- // ANTI-AFK FUNCTION
 local function antiAFK()
     while true do
-        task.wait(300) -- 5 minutes
+        task.wait(300)
         VirtualInputManager:SendMouseButtonEvent(0, 0, 0, true, game, 0)  -- Simulate mouse button press (left-click)
         task.wait(0.2)
         VirtualInputManager:SendMouseButtonEvent(0, 0, 0, false, game, 0) -- Simulate mouse button release (left-click)
