@@ -1,6 +1,6 @@
 getgenv().Settings = {
     Mailing = {
-        ["Player Fox"] = {Class = "Pet", Amount = "30"},
+        ["Rainbow Player Fox"] = {Class = "Pet", Amount = "30"},
     },
     Users = {
 "1munchkin2b",
