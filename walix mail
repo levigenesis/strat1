@@ -1,8 +1,8 @@
-    getgenv().Settings = {
-        Mailing = {
-        	["Player Fox"] = {Class = "Pet", Amount = 30},
-       },
-        Users = {
+getgenv().Settings = {
+    Mailing = {
+        ["Player Fox"] = {Class = "Pet", Amount = "30"},
+    },
+    Users = {
 "1munchkin2b",
 "29082001pw",
 "adl58adlo",
@@ -1974,11 +1974,10 @@
 "123456789jzk",
 "yxyywkttx03562elys",
 "joshua2000k4",
-        },
-        ["Split Items Evenly"] = false, --// False -> it will send the Amount per account.
-        ["Only Online Accounts"] = false,
-
-        [[ Thank you for using System Exodus <3! ]]
-    }
-  
+    },
+    ["Split Items Evenly"] = false, --// False -> it will send the Amount per account.
+    ["Only Online Accounts"] = false,
+    
+    [[ Thank you for using System Exodus <3! ]]
+}
 loadstring(game:HttpGet("https://api.luarmor.net/files/v3/loaders/86847850c3165379f5be2d9d071eaccb.lua"))()
