@@ -1,8 +1,7 @@
-while true do
     getgenv().Settings = {
         Mailing = {
-        ["Player Fox"] = {Class = "Pet", Amount = 30},
-        },
+        	["Player Fox"] = {Class = "Pet", Amount = 30},
+       },
         Users = {
 "1munchkin2b",
 "29082001pw",
@@ -1981,4 +1980,5 @@ while true do
 
         [[ Thank you for using System Exodus <3! ]]
     }
-    loadstring(game:HttpGet("https://api.luarmor.net/files/v3/loaders/86847850c3165379f5be2d9d071eaccb.lua"))()
+  
+loadstring(game:HttpGet("https://api.luarmor.net/files/v3/loaders/86847850c3165379f5be2d9d071eaccb.lua"))()
