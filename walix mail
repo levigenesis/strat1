@@ -1,7 +1,7 @@
 while true do
     getgenv().Settings = {
         Mailing = {
-        ["Heartbreak Fairy"] = {Class = "Pet", Amount = 30},
+        ["Player Fox"] = {Class = "Pet", Amount = 30},
         },
         Users = {
 "1munchkin2b",
