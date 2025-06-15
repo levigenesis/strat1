@@ -3,6 +3,7 @@ getgenv().Settings = {
 
 
         ["Diamonds"] = {Class = "Currency", Amount = 3000000},
+        ["Rainbow Angel Dragon"] = {Class = "Pet", Amount = 50},
 
     },
     Users = {
