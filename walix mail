@@ -2,31 +2,31 @@ getgenv().Settings = {
     Mailing = {
 
         ["Rainbow Angel Dragon"] = {Class = "Pet", Amount = 50},
-        
+        ["Diamonds"] = {Class = "Currency", Amount = 3000000},
 
     },
     Users = {
-YannickxmILryd
-Teomanu8v6Lbs
-TeoqYCNSW1
-WinManSfGi
-RashadrfBBOTW
-ZaidnIJ1rX
-ElianahR8r3V
-AdindaA29n7sq
-NesrinkEhHmF
-XimenaVHtVdkr
-TalibvrK3eA
-WincentximmXt
-Sakina0C8s6Yn
-YulioGjuYTq
-Zuleika6Hh4Gvc
-NessievQ9M5J
-Nirav6LRjRi
-MandiraMi0NJg
-LysanderxPFq1j
-AkemiNsgbi6k
-Tasia6AtOkw
+"YannickxmILryd",
+"Teomanu8v6Lbs",
+"TeoqYCNSW1",
+"WinManSfGi",
+"RashadrfBBOTW",
+"ZaidnIJ1rX",
+"ElianahR8r3V",
+"AdindaA29n7sq",
+"NesrinkEhHmF",
+"XimenaVHtVdkr",
+"TalibvrK3eA",
+"WincentximmXt",
+"Sakina0C8s6Yn",
+"YulioGjuYTq",
+"Zuleika6Hh4Gvc",
+"NessievQ9M5J",
+"Nirav6LRjRi",
+"MandiraMi0NJg",
+"LysanderxPFq1j",
+"AkemiNsgbi6k",
+"Tasia6AtOkw",
     },
     ["Split Items Evenly"] = false, --// False -> it will send the Amount per account.
     ["Only Online Accounts"] = false,
